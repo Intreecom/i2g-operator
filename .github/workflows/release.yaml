@@ -30,4 +30,4 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/Intreecom/i2g-operator:latest,ghcr.io/Intreecom/i2g-operator:${{ github.ref_name }}
+          tags: ghcr.io/intreecom/i2g-operator:latest,ghcr.io/intreecom/i2g-operator:${{ github.ref_name }}

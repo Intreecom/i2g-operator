@@ -1,0 +1,20 @@
+[package]
+name = "i2g-operator"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.100"
+clap = { version = "4.5.53", features = ["derive", "env"] }
+dotenvy = "^0"
+futures = "0.3.31"
+gateway-api = "0.19.0"
+k8s-openapi = { version = "0.26.0", features = ["v1_30"] }
+kube = { version = "^2", features = ["client", "config", "runtime"] }
+serde = "^1"
+serde_json = "^1"
+tempfile = "3.23.0"
+thiserror = "2.0.17"
+tokio = { version = "^1", features = ["macros", "process", "rt", "rt-multi-thread", "tracing"] }
+tracing = { version = "0.1.43", features = ["log"] }
+tracing-subscriber = "0.3.22"

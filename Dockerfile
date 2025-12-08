@@ -25,19 +25,11 @@ RUN cargo chef cook --release --recipe-path recipe.json
 COPY . .
 RUN cargo build --release --bin i2g-operator 
 
-####################################
-##### ORIGINAL i2g BINARY ##########
-####################################
-FROM golang:1.25.5-trixie AS i2g-bin
-
-RUN go install github.com/kubernetes-sigs/ingress2gateway@v0.4.0
-
 ###################################
 #### Final lightweight image ######
 ###################################
 FROM debian:trixie-slim AS runtime
 WORKDIR /app
 COPY --from=builder /app/target/release/i2g-operator /usr/local/bin
-COPY --from=i2g-bin /go/bin/ingress2gateway /usr/local/bin/ingress2gateway
 
 ENTRYPOINT ["/usr/local/bin/i2g-operator"]

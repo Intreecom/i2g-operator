@@ -228,6 +228,10 @@ async fn create_tcp_route(
 
 #[tracing::instrument(skip(ingress, ctx), fields(ingress = ingress.name_any(), namespace = ingress.namespace()), err)]
 pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResult<Action> {
+    if ctx.is_leader.load(std::sync::atomic::Ordering::Relaxed) {
+        tracing::debug!("Not a leader, skipping reconciliation");
+        return Ok(Action::requeue(Duration::from_secs(20)));
+    }
     tracing::info!("Reconciling Ingress");
     let ingress_spec = ingress
         .spec
@@ -342,6 +346,33 @@ fn on_error(obj: Arc<Ingress>, _err: &I2GError, _ctx: Arc<ctx::Context>) -> Acti
     Action::requeue(Duration::from_secs(30))
 }
 
+async fn lease_renew(ctx: Arc<ctx::Context>) {
+    let leadership = kube_leader_election::LeaseLock::new(
+        ctx.client.clone(),
+        ctx.client.default_namespace(),
+        kube_leader_election::LeaseLockParams {
+            holder_id: ctx.hostname.clone(),
+            lease_name: "i2g-operator-lock".into(),
+            lease_ttl: Duration::from_secs(15),
+        },
+    );
+    loop {
+        match leadership.try_acquire_or_renew().await {
+            Ok(lease) => {
+                if lease.acquired_lease {
+                    tracing::info!("Acquired leadership lease");
+                }
+                ctx.is_leader
+                    .store(lease.acquired_lease, std::sync::atomic::Ordering::Relaxed)
+            }
+            Err(err) => {
+                tracing::warn!("Failed to acquire or renew lease: {}", err);
+            }
+        }
+        tokio::time::sleep(Duration::from_secs(5)).await;
+    }
+}
+
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     dotenvy::dotenv().ok();
@@ -353,13 +384,23 @@ async fn main() -> anyhow::Result<()> {
     tracing::info!("Staring operator");
     tracing::info!("CLI argument: {:?}", ctx.args);
 
-    kube::runtime::Controller::new(
+    let lease_renewer = lease_renew(ctx.clone());
+
+    let ingress_controller = kube::runtime::Controller::new(
         Api::<Ingress>::all(ctx.client.clone()),
         kube::runtime::watcher::Config::default(),
     )
     .run(reconcile, on_error, ctx.clone())
-    .for_each(|_| futures::future::ready(()))
-    .await;
+    .for_each(|_| futures::future::ready(()));
+
+    tokio::select! {
+        _ = lease_renewer => {
+            tracing::error!("Lease renewer task exited unexpectedly");
+        },
+        _ = ingress_controller => {
+            tracing::error!("Ingress controller task exited unexpectedly");
+        },
+    }
 
     Ok(())
 }

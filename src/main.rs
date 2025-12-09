@@ -63,6 +63,7 @@ async fn get_svc_port_number(
 
 async fn create_http_route(
     ctx: Arc<ctx::Context>,
+    ingress_name: &str,
     section_name: Option<&String>,
     ingress_namespace: &str,
     http: &k8s_openapi::api::networking::v1::HTTPIngressRuleValue,
@@ -139,7 +140,7 @@ async fn create_http_route(
     if rules.is_empty() {
         return Err(anyhow::anyhow!("No valid paths found").into());
     }
-    let route_name = format!("{safe_hostname}-http");
+    let route_name = format!("{ingress_name}-{safe_hostname}-http");
     Ok(HTTPRoute::new(
         &route_name,
         HTTPRouteSpec {
@@ -163,6 +164,7 @@ async fn create_http_route(
 
 async fn create_tcp_route(
     ctx: Arc<ctx::Context>,
+    ingress_name: &str,
     section_name: Option<&String>,
     namespace: &str,
     svc: &IngressServiceBackend,
@@ -193,7 +195,7 @@ async fn create_tcp_route(
         );
     };
     Ok(TCPRoute::new(
-        &format!("{safe_hostname}-tcp"),
+        &format!("{ingress_name}-{safe_hostname}-tcp"),
         TCPRouteSpec {
             use_default_gateways: None,
             rules: [TCPRouteRules {
@@ -257,6 +259,7 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
         if let Some(http) = &rule.http {
             let Ok(mut route) = create_http_route(
                 ctx.clone(),
+                &ingress.name_any(),
                 desired_section_name.as_ref(),
                 &ingress_namespace,
                 &http,
@@ -301,6 +304,7 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
 
             let Ok(mut route) = create_tcp_route(
                 ctx.clone(),
+                &ingress.name_any(),
                 desired_section_name.as_ref(),
                 &ingress_namespace,
                 backend_svc,

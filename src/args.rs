@@ -22,4 +22,7 @@ pub struct I2GArgs {
     /// Whether to use experimental gateway-api resources like TCPRoutes.
     #[arg(long, env = "I2G_EXPERIMENTAL", default_value_t = false)]
     pub experimental: bool,
+
+    #[arg(long, env = "I2G_LOG_LEVEL", default_value_t = tracing::level_filters::LevelFilter::INFO)]
+    pub log_level: tracing::level_filters::LevelFilter,
 }

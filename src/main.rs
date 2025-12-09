@@ -17,6 +17,7 @@ use k8s_openapi::api::{
     networking::v1::{Ingress, IngressServiceBackend, ServiceBackendPort},
 };
 use kube::{Api, Resource, ResourceExt, api::PatchParams, runtime::controller::Action};
+use tracing::Instrument;
 
 use crate::{
     err::{I2GError, I2GResult},
@@ -62,6 +63,7 @@ async fn get_svc_port_number(
 
 async fn create_http_route(
     ctx: Arc<ctx::Context>,
+    section_name: Option<&String>,
     ingress_namespace: &str,
     http: &k8s_openapi::api::networking::v1::HTTPIngressRuleValue,
     hostname: &str,
@@ -149,8 +151,8 @@ async fn create_http_route(
                     kind: Some(gw_kind.to_string()),
                     name: ctx.args.default_gateway_name.clone(),
                     namespace: Some(ctx.args.default_gateway_namespace.clone()),
-                    port: Some(80),
-                    section_name: None,
+                    port: None,
+                    section_name: section_name.cloned(),
                 }]
                 .to_vec(),
             ),
@@ -161,6 +163,7 @@ async fn create_http_route(
 
 async fn create_tcp_route(
     ctx: Arc<ctx::Context>,
+    section_name: Option<&String>,
     namespace: &str,
     svc: &IngressServiceBackend,
     hostname: &str,
@@ -212,8 +215,8 @@ async fn create_tcp_route(
                     kind: Some(gw_kind.to_string()),
                     name: ctx.args.default_gateway_name.clone(),
                     namespace: Some(ctx.args.default_gateway_namespace.clone()),
-                    port: Some(80),
-                    section_name: None,
+                    port: None,
+                    section_name: section_name.cloned(),
                 }]
                 .to_vec(),
             ),
@@ -235,6 +238,14 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
     let ingress_namespace = ingress
         .namespace()
         .ok_or_else(|| anyhow::anyhow!("Ingress doesn't have a namespace"))?;
+
+    let desired_section_name = ingress
+        .meta()
+        .annotations
+        .as_ref()
+        .and_then(|ann| ann.get("i2g-operator/sectionName"))
+        .cloned();
+
     let default_backend = ingress_spec.default_backend.as_ref();
 
     for rule in ingress_rules {
@@ -244,8 +255,14 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
         };
 
         if let Some(http) = &rule.http {
-            let Ok(mut route) =
-                create_http_route(ctx.clone(), &ingress_namespace, &http, &host).await
+            let Ok(mut route) = create_http_route(
+                ctx.clone(),
+                desired_section_name.as_ref(),
+                &ingress_namespace,
+                &http,
+                &host,
+            )
+            .await
             else {
                 tracing::warn!("Failed to create HTTPRoute for host {}", host);
                 continue;
@@ -263,12 +280,14 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
                     },
                     &kube::api::Patch::Apply(route),
                 )
+                .instrument(tracing::info_span!("Applying generated HTTPRoute"))
                 .await?;
         } else {
             if !ctx.args.experimental {
                 tracing::warn!(
                     "Skipping rule non-http rule. In order to migrate it to TCPRoute, please add --experimental flag to i2g-operator."
                 );
+                continue;
             }
             // In case if rule.http is None
             let Some(backend) = default_backend else {
@@ -280,8 +299,14 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
                 continue;
             };
 
-            let Ok(mut route) =
-                create_tcp_route(ctx.clone(), &ingress_namespace, backend_svc, &host).await
+            let Ok(mut route) = create_tcp_route(
+                ctx.clone(),
+                desired_section_name.as_ref(),
+                &ingress_namespace,
+                backend_svc,
+                &host,
+            )
+            .await
             else {
                 tracing::warn!("Failed to create TCPRoute for host {}", host);
                 continue;
@@ -300,6 +325,7 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
                     },
                     &kube::api::Patch::Apply(route),
                 )
+                .instrument(tracing::info_span!("Applying generated TCPRoute"))
                 .await?;
         }
     }
@@ -315,9 +341,13 @@ fn on_error(obj: Arc<Ingress>, _err: &I2GError, _ctx: Arc<ctx::Context>) -> Acti
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     dotenvy::dotenv().ok();
-    tracing_subscriber::fmt::init();
 
     let ctx = Arc::new(ctx::Context::new().await?);
+    tracing_subscriber::fmt()
+        .with_max_level(ctx.args.log_level)
+        .init();
+    tracing::info!("Staring operator");
+    tracing::info!("CLI argument: {:?}", ctx.args);
 
     kube::runtime::Controller::new(
         Api::<Ingress>::all(ctx.client.clone()),

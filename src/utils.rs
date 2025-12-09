@@ -33,3 +33,16 @@ impl ObjectMetaI2GExt for ObjectMeta {
         self.owner_references = Some(owners);
     }
 }
+
+pub fn sanitize_hostname(hostname: &str) -> String {
+    let re = regex::Regex::new("[^a-zA-Z0-9]+").unwrap();
+    let sanitized_str = re.replace_all(hostname, "-");
+    let res = sanitized_str
+        .trim()
+        .trim_start_matches("-")
+        .trim_end_matches("-");
+    if res.is_empty() || res == "*" {
+        return "all-hosts".to_string();
+    }
+    res.to_string()
+}

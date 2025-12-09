@@ -18,4 +18,8 @@ pub struct I2GArgs {
     // This is ueful for deleting all HTTP or TCPRoute objects when an Ingress is deleted
     #[arg(long, env = "I2G_LINK_TO_INGRESS", default_value_t = true)]
     pub link_to_ingress: bool,
+
+    /// Whether to use experimental gateway-api resources like TCPRoutes.
+    #[arg(long, env = "I2G_EXPERIMENTAL", default_value_t = false)]
+    pub experimental: bool,
 }

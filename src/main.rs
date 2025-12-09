@@ -2,6 +2,9 @@ use std::{sync::Arc, time::Duration};
 
 use futures::StreamExt;
 use gateway_api::{
+    apis::experimental::tcproutes::{
+        TCPRoute, TCPRouteParentRefs, TCPRouteRules, TCPRouteRulesBackendRefs, TCPRouteSpec,
+    },
     gateways,
     httproutes::{
         HTTPRoute, HTTPRouteParentRefs, HTTPRouteRules, HTTPRouteRulesBackendRefs,
@@ -11,7 +14,7 @@ use gateway_api::{
 };
 use k8s_openapi::api::{
     core::v1::Service,
-    networking::v1::{Ingress, ServiceBackendPort},
+    networking::v1::{Ingress, IngressServiceBackend, ServiceBackendPort},
 };
 use kube::{Api, Resource, ResourceExt, api::PatchParams, runtime::controller::Action};
 
@@ -63,7 +66,7 @@ async fn create_http_route(
     http: &k8s_openapi::api::networking::v1::HTTPIngressRuleValue,
     hostname: &str,
 ) -> anyhow::Result<HTTPRoute> {
-    let safe_hostname = hostname.replace('.', "-");
+    let safe_hostname = utils::sanitize_hostname(hostname);
     let gw_group = <gateways::Gateway as kube::Resource>::group(&());
     let gw_kind = <gateways::Gateway as kube::Resource>::kind(&());
 
@@ -156,6 +159,68 @@ async fn create_http_route(
     ))
 }
 
+async fn create_tcp_route(
+    ctx: Arc<ctx::Context>,
+    namespace: &str,
+    svc: &IngressServiceBackend,
+    hostname: &str,
+) -> anyhow::Result<TCPRoute> {
+    let safe_hostname = utils::sanitize_hostname(hostname);
+    let gw_group = <gateways::Gateway as kube::Resource>::group(&());
+    let gw_kind = <gateways::Gateway as kube::Resource>::kind(&());
+
+    let Some(svc_port) = &svc.port else {
+        tracing::warn!("Skipping backend without service port");
+        return Err(anyhow::anyhow!("Backend doesn't have port").into());
+    };
+
+    let Some(svc_port_number) = get_svc_port_number(
+        Api::namespaced(ctx.client.clone(), namespace),
+        &svc.name,
+        svc_port,
+    )
+    .await
+    else {
+        tracing::warn!(
+            "skipping backend with unresolvable service port for service {}",
+            &svc.name
+        );
+        return Err(
+            anyhow::anyhow!(format!("Couldn't resolve port for a service {}", &svc.name)).into(),
+        );
+    };
+    Ok(TCPRoute::new(
+        &format!("{safe_hostname}-tcp"),
+        TCPRouteSpec {
+            use_default_gateways: None,
+            rules: [TCPRouteRules {
+                name: None,
+                backend_refs: [TCPRouteRulesBackendRefs {
+                    name: svc.name.clone(),
+                    port: Some(svc_port_number),
+                    kind: None,
+                    group: None,
+                    namespace: None,
+                    weight: None,
+                }]
+                .to_vec(),
+            }]
+            .to_vec(),
+            parent_refs: Some(
+                [TCPRouteParentRefs {
+                    group: Some(gw_group.to_string()),
+                    kind: Some(gw_kind.to_string()),
+                    name: ctx.args.default_gateway_name.clone(),
+                    namespace: Some(ctx.args.default_gateway_namespace.clone()),
+                    port: Some(80),
+                    section_name: None,
+                }]
+                .to_vec(),
+            ),
+        },
+    ))
+}
+
 #[tracing::instrument(skip(ingress, ctx), fields(ingress = ingress.name_any(), namespace = ingress.namespace()), err)]
 pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResult<Action> {
     tracing::info!("Reconciling Ingress");
@@ -170,12 +235,14 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
     let ingress_namespace = ingress
         .namespace()
         .ok_or_else(|| anyhow::anyhow!("Ingress doesn't have a namespace"))?;
+    let default_backend = ingress_spec.default_backend.as_ref();
 
     for rule in ingress_rules {
         let Some(host) = &rule.host else {
             tracing::warn!("Skipping rule without host");
             continue;
         };
+
         if let Some(http) = &rule.http {
             let Ok(mut route) =
                 create_http_route(ctx.clone(), &ingress_namespace, &http, &host).await
@@ -198,8 +265,42 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
                 )
                 .await?;
         } else {
+            if !ctx.args.experimental {
+                tracing::warn!(
+                    "Skipping rule non-http rule. In order to migrate it to TCPRoute, please add --experimental flag to i2g-operator."
+                );
+            }
             // In case if rule.http is None
-            unimplemented!("Only HTTP Ingress rules are supported for now");
+            let Some(backend) = default_backend else {
+                tracing::warn!("Skipping non-HTTP Ingress rule without default backend");
+                continue;
+            };
+            let Some(backend_svc) = &backend.service else {
+                tracing::warn!("defaultBackend doesn't have a service, skipping.");
+                continue;
+            };
+
+            let Ok(mut route) =
+                create_tcp_route(ctx.clone(), &ingress_namespace, backend_svc, &host).await
+            else {
+                tracing::warn!("Failed to create TCPRoute for host {}", host);
+                continue;
+            };
+
+            if ctx.args.link_to_ingress {
+                route.meta_mut().add_owner(ingress.as_ref());
+            }
+
+            Api::<TCPRoute>::namespaced(ctx.client.clone(), &ingress_namespace)
+                .patch(
+                    &route.name_any(),
+                    &PatchParams {
+                        field_manager: Some("ingress-to-gateway-controller".to_string()),
+                        ..PatchParams::default()
+                    },
+                    &kube::api::Patch::Apply(route),
+                )
+                .await?;
         }
     }
 

@@ -812,6 +812,7 @@ dependencies = [
  "gateway-api",
  "k8s-openapi",
  "kube",
+ "regex",
  "serde",
  "serde_json",
  "tempfile",

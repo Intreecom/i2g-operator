@@ -1,4 +1,4 @@
-use std::{sync::Arc, time::Duration};
+use std::{fs::OpenOptions, sync::Arc, time::Duration};
 
 use futures::StreamExt;
 use gateway_api::{
@@ -16,7 +16,11 @@ use k8s_openapi::api::{
     core::v1::Service,
     networking::v1::{Ingress, IngressServiceBackend, ServiceBackendPort},
 };
-use kube::{Api, Resource, ResourceExt, api::PatchParams, runtime::controller::Action};
+use kube::{
+    Api, Resource, ResourceExt,
+    api::{ObjectMeta, PatchParams},
+    runtime::controller::Action,
+};
 use tracing::Instrument;
 
 use crate::{
@@ -25,6 +29,7 @@ use crate::{
 };
 
 mod args;
+mod consts;
 mod ctx;
 mod err;
 mod utils;
@@ -61,19 +66,28 @@ async fn get_svc_port_number(
     return Some(port.port);
 }
 
-async fn create_http_route(
+async fn create_http_routes(
     ctx: Arc<ctx::Context>,
     ingress_name: &str,
+    ingress_meta: &ObjectMeta,
     section_name: Option<&String>,
     ingress_namespace: &str,
     http: &k8s_openapi::api::networking::v1::HTTPIngressRuleValue,
     hostname: &str,
-) -> anyhow::Result<HTTPRoute> {
+) -> anyhow::Result<Vec<HTTPRoute>> {
     let safe_hostname = utils::sanitize_hostname(hostname);
     let gw_group = <gateways::Gateway as kube::Resource>::group(&());
     let gw_kind = <gateways::Gateway as kube::Resource>::kind(&());
 
+    let split_routes = ingress_meta
+        .annotations
+        .as_ref()
+        .and_then(|ann| ann.get(consts::SPLIT_ROUTES))
+        .map(|v| v.to_lowercase() == "true")
+        .unwrap_or(false);
+
     let mut rules = vec![];
+
     for path in &http.paths {
         let Some(svc) = &path.backend.service else {
             tracing::warn!("Skipping backend without service");
@@ -96,28 +110,16 @@ async fn create_http_route(
             );
             continue;
         };
-        let mut path_matches = vec![];
-        for path in &http.paths {
-            let match_type = match path.path_type.as_str() {
-                "Prefix" => HTTPRouteRulesMatchesPathType::PathPrefix,
-                "Exact" => HTTPRouteRulesMatchesPathType::Exact,
-                "ImplementationSpecific" => HTTPRouteRulesMatchesPathType::PathPrefix,
-                _ => {
-                    return Err(
-                        anyhow::anyhow!("Unknown path type: {}", path.path_type.as_str()).into(),
-                    );
-                }
-            };
-            path_matches.push(HTTPRouteRulesMatches {
-                headers: None,
-                method: None,
-                query_params: None,
-                path: Some(HTTPRouteRulesMatchesPath {
-                    r#type: Some(match_type),
-                    value: path.path.clone(),
-                }),
-            });
-        }
+        let match_type = match path.path_type.as_str() {
+            "Prefix" => HTTPRouteRulesMatchesPathType::PathPrefix,
+            "Exact" => HTTPRouteRulesMatchesPathType::Exact,
+            "ImplementationSpecific" => HTTPRouteRulesMatchesPathType::PathPrefix,
+            _ => {
+                return Err(
+                    anyhow::anyhow!("Unknown path type: {}", path.path_type.as_str()).into(),
+                );
+            }
+        };
         rules.push(HTTPRouteRules {
             name: None,
             backend_refs: Some(
@@ -132,7 +134,15 @@ async fn create_http_route(
                 }]
                 .to_vec(),
             ),
-            matches: Some(path_matches),
+            matches: Some(vec![HTTPRouteRulesMatches {
+                headers: None,
+                method: None,
+                query_params: None,
+                path: Some(HTTPRouteRulesMatchesPath {
+                    r#type: Some(match_type),
+                    value: path.path.clone(),
+                }),
+            }]),
             filters: None,
             timeouts: None,
         });
@@ -140,8 +150,48 @@ async fn create_http_route(
     if rules.is_empty() {
         return Err(anyhow::anyhow!("No valid paths found").into());
     }
+
+    // If split_routes is enabled, create a separate HTTPRoute for each rule.
+    if split_routes {
+        return Ok(rules
+            .into_iter()
+            .map(|rule| {
+                HTTPRoute::new(
+                    &format!(
+                        "{ingress_name}-{safe_hostname}-{}",
+                        utils::sanitize_hostname(
+                            &rule
+                                .matches
+                                .as_ref()
+                                .and_then(|m| m.first())
+                                .and_then(|mm| mm.path.as_ref())
+                                .and_then(|p| p.value.clone())
+                                .unwrap_or_else(|| "root".to_string())
+                        )
+                    ),
+                    HTTPRouteSpec {
+                        hostnames: Some(vec![hostname.to_string()]),
+                        parent_refs: Some(
+                            [HTTPRouteParentRefs {
+                                group: Some(gw_group.to_string()),
+                                kind: Some(gw_kind.to_string()),
+                                name: ctx.args.default_gateway_name.clone(),
+                                namespace: Some(ctx.args.default_gateway_namespace.clone()),
+                                port: None,
+                                section_name: section_name.cloned(),
+                            }]
+                            .to_vec(),
+                        ),
+                        rules: Some(vec![rule]),
+                    },
+                )
+            })
+            .collect());
+    }
+
+    // Split routes is disabled, create a single HTTPRoute with all rules.
     let route_name = format!("{ingress_name}-{safe_hostname}-http");
-    Ok(HTTPRoute::new(
+    Ok([HTTPRoute::new(
         &route_name,
         HTTPRouteSpec {
             hostnames: Some(vec![hostname.to_string()]),
@@ -159,10 +209,11 @@ async fn create_http_route(
             ),
             rules: Some(rules),
         },
-    ))
+    )]
+    .to_vec())
 }
 
-async fn create_tcp_route(
+async fn create_tcp_routes(
     ctx: Arc<ctx::Context>,
     ingress_name: &str,
     section_name: Option<&String>,
@@ -228,7 +279,7 @@ async fn create_tcp_route(
 
 #[tracing::instrument(skip(ingress, ctx), fields(ingress = ingress.name_any(), namespace = ingress.namespace()), err)]
 pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResult<Action> {
-    if ctx.is_leader.load(std::sync::atomic::Ordering::Relaxed) {
+    if !ctx.is_leader.load(std::sync::atomic::Ordering::Relaxed) {
         tracing::debug!("Not a leader, skipping reconciliation");
         return Ok(Action::requeue(Duration::from_secs(20)));
     }
@@ -261,9 +312,10 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
         };
 
         if let Some(http) = &rule.http {
-            let Ok(mut route) = create_http_route(
+            let Ok(routes) = create_http_routes(
                 ctx.clone(),
                 &ingress.name_any(),
+                &ingress.meta(),
                 desired_section_name.as_ref(),
                 &ingress_namespace,
                 &http,
@@ -274,21 +326,28 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
                 tracing::warn!("Failed to create HTTPRoute for host {}", host);
                 continue;
             };
-            if ctx.args.link_to_ingress {
-                route.meta_mut().add_owner(ingress.as_ref());
+            let a = OpenOptions::new()
+                .create(true)
+                .write(true)
+                .open("shit.json")
+                .unwrap();
+            serde_json::to_writer_pretty(a, &routes).unwrap();
+            for mut route in routes {
+                if ctx.args.link_to_ingress {
+                    route.meta_mut().add_owner(ingress.as_ref());
+                }
+                Api::<HTTPRoute>::namespaced(ctx.client.clone(), &ingress_namespace)
+                    .patch(
+                        &route.name_any(),
+                        &PatchParams {
+                            field_manager: Some("ingress-to-gateway-controller".to_string()),
+                            ..PatchParams::default()
+                        },
+                        &kube::api::Patch::Apply(route),
+                    )
+                    .instrument(tracing::info_span!("Applying generated HTTPRoute"))
+                    .await?;
             }
-
-            Api::<HTTPRoute>::namespaced(ctx.client.clone(), &ingress_namespace)
-                .patch(
-                    &route.name_any(),
-                    &PatchParams {
-                        field_manager: Some("ingress-to-gateway-controller".to_string()),
-                        ..PatchParams::default()
-                    },
-                    &kube::api::Patch::Apply(route),
-                )
-                .instrument(tracing::info_span!("Applying generated HTTPRoute"))
-                .await?;
         } else {
             if !ctx.args.experimental {
                 tracing::warn!(
@@ -306,7 +365,7 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
                 continue;
             };
 
-            let Ok(mut route) = create_tcp_route(
+            let Ok(mut route) = create_tcp_routes(
                 ctx.clone(),
                 &ingress.name_any(),
                 desired_section_name.as_ref(),

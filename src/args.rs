@@ -23,6 +23,12 @@ pub struct I2GArgs {
     #[arg(long, env = "I2G_EXPERIMENTAL", default_value_t = false)]
     pub experimental: bool,
 
+    /// Log level for the operator.
     #[arg(long, env = "I2G_LOG_LEVEL", default_value_t = tracing::level_filters::LevelFilter::INFO)]
     pub log_level: tracing::level_filters::LevelFilter,
+
+    /// Whether to skip ingresses by default unless they have the annotation
+    /// `i2g-operator/translate: "true"`
+    #[arg(long, env = "I2G_SKIP_BY_DEFAULT", default_value_t = false)]
+    pub skip_by_default: bool,
 }

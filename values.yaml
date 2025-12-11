@@ -1,0 +1,13 @@
+image:
+  repository: registry.localhost:5000/i2g-operator
+  tag: 0.3.0
+  pullPolicy: Always
+
+replicaCount: 4
+
+env:
+  I2G_LOG_LEVEL: "info"
+  I2G_EXPERIMENTAL: "true"
+  I2G_LINK_TO_INGRESS: "true"
+  I2G_DEFAULT_GATEWAY_NAME: "gw"
+  I2G_DEFAULT_GATEWAY_NAMESPACE: "default"

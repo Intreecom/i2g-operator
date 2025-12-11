@@ -1,0 +1,5367 @@
+[
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-loki-api-v1-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-otlp-v1-logs"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-query"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-label"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-series"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-tail"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-loki-api-v1-query"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-loki-api-v1-query-range"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-loki-api-v1-tail"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-loki-api-v1-label"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-loki-api-v1-labels"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-loki-api-v1-series"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-loki-api-v1-index-stats"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-loki-api-v1-index-volume"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-loki-api-v1-index-volume-range"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-loki-api-v1-format-query"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-loki-api-v1-detected-field"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-loki-api-v1-detected-fields"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-loki-api-v1-detected-labels"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-loki-api-v1-patterns"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-rules"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-api-v1-rules"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-api-v1-alerts"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-loki-api-v1-rules"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-prometheus-api-v1-rules2"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-prometheus-api-v1-alerts"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+]      {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "apiVersion": "gateway.networking.k8s.io/v1",
+    "kind": "HTTPRoute",
+    "metadata": {
+      "name": "loki-loki-o11y-private-dev-nonprod-intree-pro-api-prom-push"
+    },
+    "spec": {
+      "hostnames": [
+        "loki.o11y.private.dev.nonprod.intree.pro"
+      ],
+      "parentRefs": [
+        {
+          "group": "gateway.networking.k8s.io",
+          "kind": "Gateway",
+          "name": "gw",
+          "namespace": "default"
+        }
+      ],
+      "rules": [
+        {
+          "backendRefs": [
+            {
+              "name": "loki",
+              "port": 3100
+            }
+          ],
+          "matches": [
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/push"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/otlp/v1/logs"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/query_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/tail"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/label"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/series"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/stats"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/index/volume_range"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/format_query"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_field"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_fields"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/detected_labels"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/patterns"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/api/prom/api/v1/alerts"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/loki/api/v1/rules"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/rules2"
+              }
+            },
+            {
+              "path": {
+                "type": "PathPrefix",
+                "value": "/prometheus/api/v1/alerts"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

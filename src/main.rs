@@ -1,4 +1,4 @@
-use std::{fs::OpenOptions, sync::Arc, time::Duration};
+use std::{sync::Arc, time::Duration};
 
 use futures::StreamExt;
 use gateway_api::{
@@ -72,6 +72,8 @@ async fn create_http_routes(
     ingress_meta: &ObjectMeta,
     section_name: Option<&String>,
     ingress_namespace: &str,
+    gw_name: &str,
+    gw_namespace: &str,
     http: &k8s_openapi::api::networking::v1::HTTPIngressRuleValue,
     hostname: &str,
 ) -> anyhow::Result<Vec<HTTPRoute>> {
@@ -175,8 +177,8 @@ async fn create_http_routes(
                             [HTTPRouteParentRefs {
                                 group: Some(gw_group.to_string()),
                                 kind: Some(gw_kind.to_string()),
-                                name: ctx.args.default_gateway_name.clone(),
-                                namespace: Some(ctx.args.default_gateway_namespace.clone()),
+                                name: gw_name.to_string(),
+                                namespace: Some(gw_namespace.to_string()),
                                 port: None,
                                 section_name: section_name.cloned(),
                             }]
@@ -200,8 +202,8 @@ async fn create_http_routes(
                 [HTTPRouteParentRefs {
                     group: Some(gw_group.to_string()),
                     kind: Some(gw_kind.to_string()),
-                    name: ctx.args.default_gateway_name.clone(),
-                    namespace: Some(ctx.args.default_gateway_namespace.clone()),
+                    name: gw_name.to_string(),
+                    namespace: Some(gw_namespace.to_string()),
                     port: None,
                     section_name: section_name.cloned(),
                 }]
@@ -217,6 +219,8 @@ async fn create_tcp_routes(
     ctx: Arc<ctx::Context>,
     ingress_name: &str,
     section_name: Option<&String>,
+    gw_name: &str,
+    gw_namespace: &str,
     namespace: &str,
     svc: &IngressServiceBackend,
     hostname: &str,
@@ -266,8 +270,8 @@ async fn create_tcp_routes(
                 [TCPRouteParentRefs {
                     group: Some(gw_group.to_string()),
                     kind: Some(gw_kind.to_string()),
-                    name: ctx.args.default_gateway_name.clone(),
-                    namespace: Some(ctx.args.default_gateway_namespace.clone()),
+                    name: gw_name.to_string(),
+                    namespace: Some(gw_namespace.to_string()),
                     port: None,
                     section_name: section_name.cloned(),
                 }]
@@ -283,6 +287,23 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
         tracing::debug!("Not a leader, skipping reconciliation");
         return Ok(Action::requeue(Duration::from_secs(20)));
     }
+
+    // Only translate if the annotation is present and true
+    // or if skip_by_default is false and
+    // the annotation is not present or equals to true
+    let skip_translation = ingress
+        .meta()
+        .annotations
+        .as_ref()
+        .and_then(|ann| ann.get(consts::TRANSLATE_INGRESS))
+        .map(|v| v.to_lowercase() == "true")
+        .unwrap_or(!ctx.args.skip_by_default);
+
+    if skip_translation {
+        tracing::info!("Skipping translation due to annotation or operator settings");
+        return Ok(Action::requeue(Duration::from_secs(60)));
+    }
+
     tracing::info!("Reconciling Ingress");
     let ingress_spec = ingress
         .spec
@@ -300,8 +321,22 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
         .meta()
         .annotations
         .as_ref()
-        .and_then(|ann| ann.get("i2g-operator/sectionName"))
+        .and_then(|ann| ann.get(consts::DESIRED_SECTION))
         .cloned();
+
+    let gw_namespace = ingress
+        .meta()
+        .annotations
+        .as_ref()
+        .and_then(|annot| annot.get(consts::GATEWAY_NAMESPACE))
+        .unwrap_or(&ctx.args.default_gateway_namespace);
+
+    let gw_name = ingress
+        .meta()
+        .annotations
+        .as_ref()
+        .and_then(|annot| annot.get(consts::GATEWAY_NAME))
+        .unwrap_or(&ctx.args.default_gateway_namespace);
 
     let default_backend = ingress_spec.default_backend.as_ref();
 
@@ -317,6 +352,8 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
                 &ingress.name_any(),
                 &ingress.meta(),
                 desired_section_name.as_ref(),
+                gw_name,
+                gw_namespace,
                 &ingress_namespace,
                 &http,
                 &host,
@@ -326,12 +363,6 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
                 tracing::warn!("Failed to create HTTPRoute for host {}", host);
                 continue;
             };
-            let a = OpenOptions::new()
-                .create(true)
-                .write(true)
-                .open("shit.json")
-                .unwrap();
-            serde_json::to_writer_pretty(a, &routes).unwrap();
             for mut route in routes {
                 if ctx.args.link_to_ingress {
                     route.meta_mut().add_owner(ingress.as_ref());
@@ -369,6 +400,8 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
                 ctx.clone(),
                 &ingress.name_any(),
                 desired_section_name.as_ref(),
+                gw_name,
+                gw_namespace,
                 &ingress_namespace,
                 backend_svc,
                 &host,

@@ -74,9 +74,9 @@ async fn create_http_routes(
     ingress_name: &str,
     ingress_meta: &ObjectMeta,
     section_name: Option<&String>,
-    ingress_namespace: &str,
     gw_name: &str,
     gw_namespace: &str,
+    ingress_namespace: &str,
     http: &k8s_openapi::api::networking::v1::HTTPIngressRuleValue,
     hostname: &str,
 ) -> anyhow::Result<Vec<HTTPRoute>> {
@@ -224,7 +224,7 @@ async fn create_tcp_routes(
     section_name: Option<&String>,
     gw_name: &str,
     gw_namespace: &str,
-    namespace: &str,
+    ingress_namespace: &str,
     svc: &IngressServiceBackend,
     hostname: &str,
 ) -> anyhow::Result<TCPRoute> {
@@ -238,7 +238,7 @@ async fn create_tcp_routes(
     };
 
     let Some(svc_port_number) = get_svc_port_number(
-        Api::namespaced(ctx.client.clone(), namespace),
+        Api::namespaced(ctx.client.clone(), ingress_namespace),
         &svc.name,
         svc_port,
     )

@@ -296,8 +296,8 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
         .annotations
         .as_ref()
         .and_then(|ann| ann.get(consts::TRANSLATE_INGRESS))
-        .map(|v| v.to_lowercase() == "true")
-        .unwrap_or(!ctx.args.skip_by_default);
+        .map(|v| v.to_lowercase() != "true")
+        .unwrap_or(ctx.args.skip_by_default);
 
     if skip_translation {
         tracing::info!("Skipping translation due to annotation or operator settings");

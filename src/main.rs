@@ -339,7 +339,7 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
         .annotations
         .as_ref()
         .and_then(|annot| annot.get(consts::GATEWAY_NAME))
-        .unwrap_or(&ctx.args.default_gateway_namespace);
+        .unwrap_or(&ctx.args.default_gateway_name);
 
     let default_backend = ingress_spec.default_backend.as_ref();
 

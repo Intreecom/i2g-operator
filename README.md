@@ -1,7 +1,7 @@
 # ingress2gateway operator
 
 > [!IMPORTANT]
-> This project is not intended to use for your applications since you have direct access to this config. It's main goal is to convert third-party ingresses to gateways.
+> This project is not intended to use for your applications since you have direct access to this config. It's main goal is to convert third-party ingresses to gateway-compatible resources.
 
 ### Installation
 

@@ -26,6 +26,7 @@ use tracing::Instrument;
 use crate::{
     err::{I2GError, I2GResult},
     utils::ObjectMetaI2GExt,
+    value_filters::{HeadersMatchersList, MatcherList, QueryMatchersList},
 };
 
 mod args;
@@ -33,9 +34,22 @@ mod consts;
 mod ctx;
 mod err;
 mod utils;
+mod value_filters;
 
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
+pub struct RouteInputInfo<'a> {
+    pub ingress_name: String,
+    pub ingress_meta: &'a ObjectMeta,
+    pub ingress_namespace: String,
+    pub gw_name: String,
+    pub gw_namespace: String,
+    pub section_name: Option<String>,
+    pub hostname: String,
+    pub header_matchers: Option<value_filters::HeadersMatchersList>,
+    pub query_matchers: Option<value_filters::QueryMatchersList>,
+}
 
 async fn get_svc_port_number(
     api: Api<Service>,
@@ -71,20 +85,15 @@ async fn get_svc_port_number(
 
 async fn create_http_routes(
     ctx: Arc<ctx::Context>,
-    ingress_name: &str,
-    ingress_meta: &ObjectMeta,
-    section_name: Option<&String>,
-    gw_name: &str,
-    gw_namespace: &str,
-    ingress_namespace: &str,
+    route_info: RouteInputInfo<'_>,
     http: &k8s_openapi::api::networking::v1::HTTPIngressRuleValue,
-    hostname: &str,
 ) -> anyhow::Result<Vec<HTTPRoute>> {
-    let safe_hostname = utils::sanitize_hostname(hostname);
+    let safe_hostname = utils::sanitize_hostname(&route_info.hostname);
     let gw_group = <gateways::Gateway as kube::Resource>::group(&());
     let gw_kind = <gateways::Gateway as kube::Resource>::kind(&());
 
-    let split_routes = ingress_meta
+    let split_routes = route_info
+        .ingress_meta
         .annotations
         .as_ref()
         .and_then(|ann| ann.get(consts::SPLIT_ROUTES))
@@ -103,7 +112,7 @@ async fn create_http_routes(
             continue;
         };
         let Some(svc_port_number) = get_svc_port_number(
-            Api::namespaced(ctx.client.clone(), ingress_namespace),
+            Api::namespaced(ctx.client.clone(), &route_info.ingress_namespace),
             &svc.name,
             svc_port,
         )
@@ -140,9 +149,9 @@ async fn create_http_routes(
                 .to_vec(),
             ),
             matches: Some(vec![HTTPRouteRulesMatches {
-                headers: None,
+                headers: route_info.header_matchers.clone().map(Into::into),
                 method: None,
-                query_params: None,
+                query_params: route_info.query_matchers.clone().map(Into::into),
                 path: Some(HTTPRouteRulesMatchesPath {
                     r#type: Some(match_type),
                     value: path.path.clone(),
@@ -163,7 +172,9 @@ async fn create_http_routes(
             .map(|rule| {
                 HTTPRoute::new(
                     &format!(
-                        "{ingress_name}-{safe_hostname}-{}",
+                        "{}-{}-{}",
+                        route_info.ingress_name,
+                        safe_hostname,
                         utils::sanitize_hostname(
                             &rule
                                 .matches
@@ -175,15 +186,15 @@ async fn create_http_routes(
                         )
                     ),
                     HTTPRouteSpec {
-                        hostnames: Some(vec![hostname.to_string()]),
+                        hostnames: Some(vec![route_info.hostname.clone()]),
                         parent_refs: Some(
                             [HTTPRouteParentRefs {
                                 group: Some(gw_group.to_string()),
                                 kind: Some(gw_kind.to_string()),
-                                name: gw_name.to_string(),
-                                namespace: Some(gw_namespace.to_string()),
+                                name: route_info.gw_name.to_string(),
+                                namespace: Some(route_info.gw_namespace.to_string()),
                                 port: None,
-                                section_name: section_name.cloned(),
+                                section_name: route_info.section_name.clone(),
                             }]
                             .to_vec(),
                         ),
@@ -195,20 +206,19 @@ async fn create_http_routes(
     }
 
     // Split routes is disabled, create a single HTTPRoute with all rules.
-    let route_name = format!("{ingress_name}-{safe_hostname}-http");
     Ok([HTTPRoute::new(
-        &route_name,
+        &format!("{}-{}-http", route_info.ingress_name, safe_hostname),
         HTTPRouteSpec {
-            hostnames: Some(vec![hostname.to_string()]),
+            hostnames: Some(vec![route_info.hostname.to_string()]),
             // parent_refs: None,
             parent_refs: Some(
                 [HTTPRouteParentRefs {
                     group: Some(gw_group.to_string()),
                     kind: Some(gw_kind.to_string()),
-                    name: gw_name.to_string(),
-                    namespace: Some(gw_namespace.to_string()),
+                    name: route_info.gw_name.to_string(),
+                    namespace: Some(route_info.gw_namespace.to_string()),
                     port: None,
-                    section_name: section_name.cloned(),
+                    section_name: route_info.section_name.clone(),
                 }]
                 .to_vec(),
             ),
@@ -220,15 +230,10 @@ async fn create_http_routes(
 
 async fn create_tcp_routes(
     ctx: Arc<ctx::Context>,
-    ingress_name: &str,
-    section_name: Option<&String>,
-    gw_name: &str,
-    gw_namespace: &str,
-    ingress_namespace: &str,
+    route_info: RouteInputInfo<'_>,
     svc: &IngressServiceBackend,
-    hostname: &str,
 ) -> anyhow::Result<TCPRoute> {
-    let safe_hostname = utils::sanitize_hostname(hostname);
+    let safe_hostname = utils::sanitize_hostname(&route_info.hostname);
     let gw_group = <gateways::Gateway as kube::Resource>::group(&());
     let gw_kind = <gateways::Gateway as kube::Resource>::kind(&());
 
@@ -238,7 +243,7 @@ async fn create_tcp_routes(
     };
 
     let Some(svc_port_number) = get_svc_port_number(
-        Api::namespaced(ctx.client.clone(), ingress_namespace),
+        Api::namespaced(ctx.client.clone(), &route_info.ingress_namespace),
         &svc.name,
         svc_port,
     )
@@ -253,7 +258,7 @@ async fn create_tcp_routes(
         );
     };
     Ok(TCPRoute::new(
-        &format!("{ingress_name}-{safe_hostname}-tcp"),
+        &format!("{}-{}-tcp", route_info.ingress_name, safe_hostname),
         TCPRouteSpec {
             use_default_gateways: None,
             rules: [TCPRouteRules {
@@ -273,10 +278,10 @@ async fn create_tcp_routes(
                 [TCPRouteParentRefs {
                     group: Some(gw_group.to_string()),
                     kind: Some(gw_kind.to_string()),
-                    name: gw_name.to_string(),
-                    namespace: Some(gw_namespace.to_string()),
+                    name: route_info.gw_name.to_string(),
+                    namespace: Some(route_info.gw_namespace.to_string()),
                     port: None,
-                    section_name: section_name.cloned(),
+                    section_name: route_info.section_name.clone(),
                 }]
                 .to_vec(),
             ),
@@ -341,6 +346,21 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
         .and_then(|annot| annot.get(consts::GATEWAY_NAME))
         .unwrap_or(&ctx.args.default_gateway_name);
 
+    let header_matchers = ingress
+        .meta()
+        .annotations
+        .as_ref()
+        .map(|annotations| {
+            MatcherList::from_annotations(annotations, consts::HEADER_FILTERS_PREFIX)
+        })
+        .map(HeadersMatchersList);
+    let query_matchers = ingress
+        .meta()
+        .annotations
+        .as_ref()
+        .map(|annotations| MatcherList::from_annotations(annotations, consts::QUERY_FILTERS_PREFIX))
+        .map(QueryMatchersList);
+
     let default_backend = ingress_spec.default_backend.as_ref();
 
     for rule in ingress_rules {
@@ -349,20 +369,20 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
             continue;
         };
 
+        let route_info = RouteInputInfo {
+            ingress_name: ingress.name_any(),
+            header_matchers: header_matchers.clone(),
+            query_matchers: query_matchers.clone(),
+            gw_name: gw_name.to_string(),
+            gw_namespace: gw_namespace.to_string(),
+            ingress_meta: ingress.meta(),
+            hostname: host.to_string(),
+            ingress_namespace: ingress_namespace.clone(),
+            section_name: desired_section_name.clone(),
+        };
+
         if let Some(http) = &rule.http {
-            let Ok(routes) = create_http_routes(
-                ctx.clone(),
-                &ingress.name_any(),
-                &ingress.meta(),
-                desired_section_name.as_ref(),
-                gw_name,
-                gw_namespace,
-                &ingress_namespace,
-                &http,
-                &host,
-            )
-            .await
-            else {
+            let Ok(routes) = create_http_routes(ctx.clone(), route_info, &http).await else {
                 tracing::warn!("Failed to create HTTPRoute for host {}", host);
                 continue;
             };
@@ -399,17 +419,7 @@ pub async fn reconcile(ingress: Arc<Ingress>, ctx: Arc<ctx::Context>) -> I2GResu
                 continue;
             };
 
-            let Ok(mut route) = create_tcp_routes(
-                ctx.clone(),
-                &ingress.name_any(),
-                desired_section_name.as_ref(),
-                gw_name,
-                gw_namespace,
-                &ingress_namespace,
-                backend_svc,
-                &host,
-            )
-            .await
+            let Ok(mut route) = create_tcp_routes(ctx.clone(), route_info, backend_svc).await
             else {
                 tracing::warn!("Failed to create TCPRoute for host {}", host);
                 continue;

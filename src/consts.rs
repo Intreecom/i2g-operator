@@ -13,3 +13,6 @@ pub const GATEWAY_NAMESPACE: &'static str = "i2g-operator/gateway-namespace";
 
 /// What section to use for resulting Routes.
 pub const DESIRED_SECTION: &'static str = "i2g-operator/section-name";
+
+pub const HEADER_FILTERS_PREFIX: &'static str = "i2g-operator/matches/header/";
+pub const QUERY_FILTERS_PREFIX: &'static str = "i2g-operator/matches/query/";

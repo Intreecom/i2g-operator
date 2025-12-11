@@ -34,6 +34,9 @@ mod ctx;
 mod err;
 mod utils;
 
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 async fn get_svc_port_number(
     api: Api<Service>,
     svc_name: &str,

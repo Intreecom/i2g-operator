@@ -12,6 +12,7 @@ gateway-api = "0.19.0"
 k8s-openapi = { version = "0.26.0", features = ["v1_30"] }
 kube = { version = "^2", features = ["client", "config", "runtime"] }
 kube-leader-election = "0.42.0"
+mimalloc = "0.1.48"
 rand = "0.9.2"
 regex = "1.12.2"
 serde = "^1"

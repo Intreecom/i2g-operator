@@ -69,6 +69,11 @@ metadata:
     # Specify a particular listener name
     # for generated routes.
     i2g-operator/section-name: "my-section"
+    # Here's how to add additional matchers.
+    i2g-operator-matches-header/2: "X-Forwarded-For=1.2.3.4"
+    # Here's how to add additional matchers.
+    i2g-operator-matches-query/2: "myQuery~=^(test.hehe|test.memes)"
+    
   name: test-ingress
 spec:
   ingressClassName: nginx
@@ -89,3 +94,20 @@ spec:
     secretName: test-tls-secret
 
 ```
+
+### Matchers
+
+To add additional requrest matchers to HTTPRoute, you can use annotations. Here are two of them:
+
+* `i2g-operator-matches-header/{weight}`
+* `i2g-operator-matches-query/{weight}`
+
+Basically, you can create multiple rules specifying the weight for ordering. It's useful if you want, for example,
+craete a rule for additional matches against X-Forwarded-For set by your proxy.
+
+Each rule is a key-value pair where key is header (or queryParam) name and value is it's value. There are 2 ways of matching.
+
+1. key=value
+2. key~=value
+
+The difference is that `=` rules are translated to `Exact` match and `~=` rules are translated to Regularexpression matches.

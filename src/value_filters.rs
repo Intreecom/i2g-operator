@@ -101,9 +101,8 @@ impl FromStr for MatchRule {
     type Err = I2GError;
 
     fn from_str(rule: &str) -> Result<Self, Self::Err> {
-        let parts = rule.split('=').collect::<Vec<_>>();
-        match *parts.as_slice() {
-            [key, value] => {
+        match rule.split_once('=') {
+            Some((key, value)) => {
                 if key.ends_with('~') {
                     return Ok(MatchRule::RegularExpression(
                         key.strip_suffix('~').unwrap().to_string(),

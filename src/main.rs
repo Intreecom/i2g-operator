@@ -1,4 +1,4 @@
-use std::{collections::HashMap, sync::Arc, time::Duration};
+use std::{sync::Arc, time::Duration};
 
 use futures::StreamExt;
 use gateway_api::{
@@ -180,7 +180,7 @@ async fn create_http_routes(
         .map(|v| v.to_lowercase() == "true")
         .unwrap_or(false);
 
-    let mut match_ruleset = create_match_rulesets(&route_info);
+    let match_ruleset = create_match_rulesets(&route_info);
 
     let mut rules = vec![];
 

@@ -89,6 +89,15 @@ enum EitherQueryOrHeaderMatcher {
     Query(MatchRule),
 }
 
+impl From<EitherQueryOrHeaderMatcher> for MatchRule {
+    fn from(value: EitherQueryOrHeaderMatcher) -> Self {
+        match value {
+            EitherQueryOrHeaderMatcher::Header(match_rule) => match_rule,
+            EitherQueryOrHeaderMatcher::Query(match_rule) => match_rule,
+        }
+    }
+}
+
 fn create_match_rulesets(
     route_info: &RouteInputInfo<'_>,
 ) -> Vec<(Option<HeadersMatchersList>, Option<QueryMatchersList>)> {
@@ -105,7 +114,6 @@ fn create_match_rulesets(
                     .collect::<Vec<_>>()
             })
             .collect::<Vec<_>>();
-        tracing::warn!("{headers_cart:#?}");
     }
     let mut query_cart = vec![];
     if let Some(query_matcher) = &route_info.query_matchers {
@@ -120,7 +128,34 @@ fn create_match_rulesets(
                     .collect::<Vec<_>>()
             })
             .collect::<Vec<_>>();
-        tracing::warn!("{query_cart:#?}");
+    }
+
+    if headers_cart.is_empty() && query_cart.is_empty() {
+        return vec![(None, None)];
+    }
+    if headers_cart.is_empty() {
+        let mut res = vec![];
+        for matchers in query_cart {
+            res.push((
+                None,
+                Some(QueryMatchersList(MatcherList(
+                    matchers.into_iter().map(Into::into).collect(),
+                ))),
+            ));
+        }
+        return res;
+    }
+    if query_cart.is_empty() {
+        let mut res = vec![];
+        for matchers in headers_cart {
+            res.push((
+                Some(HeadersMatchersList(MatcherList(
+                    matchers.into_iter().map(Into::into).collect(),
+                ))),
+                None,
+            ));
+        }
+        return res;
     }
 
     let to_permute = vec![headers_cart, query_cart];
@@ -181,6 +216,7 @@ async fn create_http_routes(
         .unwrap_or(false);
 
     let match_ruleset = create_match_rulesets(&route_info);
+    tracing::info!("{match_ruleset:#?}");
 
     let mut rules = vec![];
 

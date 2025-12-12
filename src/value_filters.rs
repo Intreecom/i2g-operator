@@ -1,7 +1,7 @@
-use std::{collections::BTreeMap, ops::Deref, str::FromStr};
+use std::{collections::BTreeMap, str::FromStr};
 
 use gateway_api::httproutes::{
-    HTTPRouteRulesMatches, HTTPRouteRulesMatchesHeaders, HTTPRouteRulesMatchesQueryParams,
+    HTTPRouteRulesMatchesHeaders, HTTPRouteRulesMatchesQueryParams,
 };
 
 use crate::err::I2GError;

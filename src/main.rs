@@ -1,4 +1,4 @@
-use std::{sync::Arc, time::Duration};
+use std::{collections::HashMap, sync::Arc, time::Duration};
 
 use futures::StreamExt;
 use gateway_api::{
@@ -26,7 +26,7 @@ use tracing::Instrument;
 use crate::{
     err::{I2GError, I2GResult},
     utils::ObjectMetaI2GExt,
-    value_filters::{HeadersMatchersList, MatcherList, QueryMatchersList},
+    value_filters::{HeadersMatchersList, MatchRule, MatcherList, QueryMatchersList},
 };
 
 mod args;
@@ -83,6 +83,86 @@ async fn get_svc_port_number(
     return Some(port.port);
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum EitherQueryOrHeaderMatcher {
+    Header(MatchRule),
+    Query(MatchRule),
+}
+
+fn create_match_rulesets(
+    route_info: &RouteInputInfo<'_>,
+) -> Vec<(Option<HeadersMatchersList>, Option<QueryMatchersList>)> {
+    let mut headers_cart = vec![];
+    if let Some(header_matcher) = &route_info.header_matchers {
+        headers_cart = header_matcher
+            .0
+            .catesian_product()
+            .into_iter()
+            .map(|rules| {
+                rules
+                    .into_iter()
+                    .map(|rule| EitherQueryOrHeaderMatcher::Header(rule))
+                    .collect::<Vec<_>>()
+            })
+            .collect::<Vec<_>>();
+        tracing::warn!("{headers_cart:#?}");
+    }
+    let mut query_cart = vec![];
+    if let Some(query_matcher) = &route_info.query_matchers {
+        query_cart = query_matcher
+            .0
+            .catesian_product()
+            .into_iter()
+            .map(|rules| {
+                rules
+                    .into_iter()
+                    .map(|rule| EitherQueryOrHeaderMatcher::Query(rule))
+                    .collect::<Vec<_>>()
+            })
+            .collect::<Vec<_>>();
+        tracing::warn!("{query_cart:#?}");
+    }
+
+    let to_permute = vec![headers_cart, query_cart];
+
+    let mut res = vec![];
+
+    permutator::cartesian_product(
+        to_permute
+            .iter()
+            .map(|a| a.as_slice())
+            .collect::<Vec<_>>()
+            .as_slice(),
+        |product| {
+            let mut headers_list = vec![];
+            let mut query_list = vec![];
+            for item in product.to_vec().into_iter().flatten() {
+                match item {
+                    EitherQueryOrHeaderMatcher::Header(match_rule) => {
+                        headers_list.push(match_rule.clone())
+                    }
+                    EitherQueryOrHeaderMatcher::Query(match_rule) => {
+                        query_list.push(match_rule.clone())
+                    }
+                }
+            }
+            let mut query_ruleset = None;
+            let mut header_ruleset = None;
+            if !query_list.is_empty() {
+                query_ruleset = Some(QueryMatchersList(MatcherList(query_list)));
+            }
+            if !headers_list.is_empty() {
+                header_ruleset = Some(HeadersMatchersList(MatcherList(headers_list)));
+            }
+            res.push((header_ruleset, query_ruleset));
+        },
+    );
+    if res.is_empty() {
+        return vec![(None, None)];
+    }
+    res
+}
+
 async fn create_http_routes(
     ctx: Arc<ctx::Context>,
     route_info: RouteInputInfo<'_>,
@@ -99,6 +179,8 @@ async fn create_http_routes(
         .and_then(|ann| ann.get(consts::SPLIT_ROUTES))
         .map(|v| v.to_lowercase() == "true")
         .unwrap_or(false);
+
+    let mut match_ruleset = create_match_rulesets(&route_info);
 
     let mut rules = vec![];
 
@@ -134,32 +216,34 @@ async fn create_http_routes(
                 );
             }
         };
-        rules.push(HTTPRouteRules {
-            name: None,
-            backend_refs: Some(
-                [HTTPRouteRulesBackendRefs {
-                    name: svc.name.clone(),
-                    port: Some(svc_port_number),
-                    kind: None,
-                    group: None,
-                    namespace: None,
-                    filters: None,
-                    weight: None,
-                }]
-                .to_vec(),
-            ),
-            matches: Some(vec![HTTPRouteRulesMatches {
-                headers: route_info.header_matchers.clone().map(Into::into),
-                method: None,
-                query_params: route_info.query_matchers.clone().map(Into::into),
-                path: Some(HTTPRouteRulesMatchesPath {
-                    r#type: Some(match_type),
-                    value: path.path.clone(),
-                }),
-            }]),
-            filters: None,
-            timeouts: None,
-        });
+        for (header_matchers, query_matchers) in &match_ruleset {
+            rules.push(HTTPRouteRules {
+                name: None,
+                backend_refs: Some(
+                    [HTTPRouteRulesBackendRefs {
+                        name: svc.name.clone(),
+                        port: Some(svc_port_number),
+                        kind: None,
+                        group: None,
+                        namespace: None,
+                        filters: None,
+                        weight: None,
+                    }]
+                    .to_vec(),
+                ),
+                matches: Some(vec![HTTPRouteRulesMatches {
+                    headers: header_matchers.clone().map(Into::into),
+                    method: None,
+                    query_params: query_matchers.clone().map(Into::into),
+                    path: Some(HTTPRouteRulesMatchesPath {
+                        r#type: Some(match_type.clone()),
+                        value: path.path.clone(),
+                    }),
+                }]),
+                filters: None,
+                timeouts: None,
+            });
+        }
     }
     if rules.is_empty() {
         return Err(anyhow::anyhow!("No valid paths found").into());

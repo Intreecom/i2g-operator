@@ -216,7 +216,7 @@ async fn create_http_routes(
         .unwrap_or(false);
 
     let match_ruleset = create_match_rulesets(&route_info);
-    tracing::info!("{match_ruleset:#?}");
+    tracing::debug!("Match ruleset: \n{match_ruleset:#?}");
 
     let mut rules = vec![];
 

@@ -25,7 +25,7 @@ use tracing::Instrument;
 
 use crate::{
     err::{I2GError, I2GResult},
-    utils::ObjectMetaI2GExt,
+    utils::{ObjectMetaI2GExt, sanitize_hostname},
     value_filters::{HeadersMatchersList, MatchRule, MatcherList, QueryMatchersList},
 };
 
@@ -252,9 +252,14 @@ async fn create_http_routes(
                 );
             }
         };
-        for (header_matchers, query_matchers) in &match_ruleset {
+        let mut san_path = String::from("");
+        if let Some(path) = &path.path {
+            san_path = format!("{}-", sanitize_hostname(path));
+        }
+
+        for (num, (header_matchers, query_matchers)) in match_ruleset.iter().enumerate() {
             rules.push(HTTPRouteRules {
-                name: None,
+                name: Some(format!("{}{}", san_path, num)),
                 backend_refs: Some(
                     [HTTPRouteRulesBackendRefs {
                         name: svc.name.clone(),
@@ -289,22 +294,10 @@ async fn create_http_routes(
     if split_routes {
         return Ok(rules
             .into_iter()
-            .map(|rule| {
+            .enumerate()
+            .map(|(index, rule)| {
                 HTTPRoute::new(
-                    &format!(
-                        "{}-{}-{}",
-                        route_info.ingress_name,
-                        safe_hostname,
-                        utils::sanitize_hostname(
-                            &rule
-                                .matches
-                                .as_ref()
-                                .and_then(|m| m.first())
-                                .and_then(|mm| mm.path.as_ref())
-                                .and_then(|p| p.value.clone())
-                                .unwrap_or_else(|| "root".to_string())
-                        )
-                    ),
+                    &format!("{}-{}-{}", route_info.ingress_name, safe_hostname, index),
                     HTTPRouteSpec {
                         hostnames: Some(vec![route_info.hostname.clone()]),
                         parent_refs: Some(
